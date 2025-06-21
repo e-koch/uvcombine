@@ -1,66 +1,36 @@
 name: Run tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+    - main
+    tags:
+    - '*'
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   tests:
-    name: ${{ matrix.name}}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            python-version: "3.10"
-            name: Python 3.10 with minimal dependencies
-            toxenv: py310-test
-          - os: ubuntu-latest
-            python-version: 3.12
-            name: Python 3.12 with minimal dependencies
-            toxenv: py312-test
-          - os: ubuntu-latest
-            python-version: 3.11
-            name: Python 3.11 with minimal dependencies
-            toxenv: py311-test
-          - os: ubuntu-latest
-            python-version: 3.9
-            name: Python 3.9 with minimal dependencies
-            toxenv: py39-test
-          - os: ubuntu-latest
-            python-version: 3.8
-            name: Python 3.8 with minimal dependencies
-            toxenv: py38-test
-          - os: ubuntu-latest
-            python-version: 3.8
-            name: Python 3.8 with CASA
-            toxenv: py38-test-casa
-          - os: ubuntu-latest
-            python-version: "3.10"
-            name: Python 3.10 with all non-visualization dependencies
-            toxenv: py310-test-all
-          - os: ubuntu-latest
-            python-version: "3.10"
-            name: Documentation
-            toxenv: build_docs
+    uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@v2
+    with:
+      display: true
+      libraries: |
+        apt:
+          - '^libxcb.*-dev'
+          - libxkbcommon-x11-dev
+          - libegl1
+      envs: |
+        - linux: build_docs
+        - linux: py310-test
+        - linux: py310-test-casa
+        - linux: py312-test-dev
+        - linux: py313-test-all
+        - macos: py310-test-all
+        - macos: py311-test-all
+        - macos: py312-test-all
+        - macos: py313-test-dev
+        - windows: py310-test-all
+        - windows: py311-test-all
+        - windows: py312-test-all
+        - windows: py313-test-dev
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install testing dependencies
-      run: |
-        python -m pip install tox codecov
-        mkdir ${GITHUB_WORKSPACE}/.casa
-        echo "datapath=['${GITHUB_WORKSPACE}/.casa/']; measurespath=datapath[0]; measures_auto_update=True; data_auto_update=True" > $GITHUB_WORKSPACE/config.py
-        pip install casadata
-        export CASASITECONFIG=$GITHUB_WORKSPACE/config.py
-
-    - name: Run tests with ${{ matrix.name }}
-      run: CASASITECONFIG=$GITHUB_WORKSPACE/config.py tox -v -e ${{ matrix.toxenv }}
-    - name: Upload coverage to codecov
-      if: ${{ contains(matrix.toxenv,'-cov') }}
-      uses: codecov/codecov-action@v1.0.13
-      with:
-        file: ./coverage.xml

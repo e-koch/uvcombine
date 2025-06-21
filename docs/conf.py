@@ -28,6 +28,7 @@
 import datetime
 import os
 import sys
+from importlib import metadata
 
 try:
     from sphinx_astropy.conf.v1 import *  # noqa
@@ -35,14 +36,12 @@ except ImportError:
     print('ERROR: the documentation requires the sphinx-astropy package to be installed')
     sys.exit(1)
 
-# Get configuration information from setup.cfg
-from configparser import ConfigParser
-conf = ConfigParser()
-
-conf.read([os.path.join(os.path.dirname(__file__), '..', 'setup.cfg')])
-setup_cfg = dict(conf.items('metadata'))
+package_info = metadata.metadata("uvcombine")
 
 # -- General configuration ----------------------------------------------------
+
+# By default, highlight as Python 3.
+highlight_language = 'python3'
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #needs_sphinx = '1.2'
@@ -63,22 +62,18 @@ rst_epilog += """
 # -- Project information ------------------------------------------------------
 
 # This does not *have* to match the package name, but typically does
-project = setup_cfg['name']
-author = setup_cfg['author']
-copyright = '{0}, {1}'.format(
-    datetime.datetime.now().year, setup_cfg['author'])
+project = package_info["Name"]
+author = package_info["Author"]
+copyright = "{}, {}".format(datetime.datetime.now().year, package_info["Author"])
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 
-__import__(setup_cfg['name'])
-package = sys.modules[setup_cfg['name']]
-
 # The short X.Y version.
-version = package.__version__.split('-', 1)[0]
+version = package_info["Version"].split("-", 1)[0]
 # The full version, including alpha/beta/rc tags.
-release = package.__version__
+release = package_info["Version"]
 
 
 # -- Options for HTML output ---------------------------------------------------
@@ -98,6 +93,13 @@ release = package.__version__
 # a list of builtin themes. To override the custom theme, set this to the
 # name of a builtin theme or the name of a custom theme in html_theme_path.
 #html_theme = None
+
+
+html_theme_options = {
+    'logotext1': 'uvcombine',  # white,  semi-bold
+    'logotext2': '',  # orange, light
+    'logotext3': ':docs'   # white,  light
+    }
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
@@ -137,19 +139,3 @@ latex_documents = [('index', project + '.tex', project + u' Documentation',
 # (source start file, name, description, authors, manual section).
 man_pages = [('index', project.lower(), project + u' Documentation',
               [author], 1)]
-
-
-## -- Options for the edit_on_github extension ----------------------------------------
-
-if eval(setup_cfg.get('edit_on_github')):
-    extensions += ['astropy_helpers.sphinx.ext.edit_on_github']
-
-    versionmod = __import__(setup_cfg['name'] + '.version')
-    edit_on_github_project = setup_cfg['github_project']
-    if versionmod.version.release:
-        edit_on_github_branch = "v" + versionmod.version.version
-    else:
-        edit_on_github_branch = "master"
-
-    edit_on_github_source_root = ""
-    edit_on_github_doc_root = "docs"
