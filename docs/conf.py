@@ -28,7 +28,7 @@
 import datetime
 import os
 import sys
-from importlib import metadata
+from importlib import import_module, metadata
 
 try:
     from sphinx_astropy.conf.v1 import *  # noqa
