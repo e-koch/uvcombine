@@ -22,7 +22,7 @@ The defaults settings in `~uvcombine.feather_simple` match those used by CASA's
 `feather task <https://casadocs.readthedocs.io/en/stable/api/tt/casatasks.imaging.feather.html>`_.
 
 `~uvcombine.feather_simple` has many options to alter the handling, uv-cutoff, or weighting of the two
-images when combining::
+images when combining.
 
 * ``lowresscalefactor`` and  ``highresscalefactor``. Flux scaling factors to multiple the data by before combining. Typically the low-resolution (single-dish) value is changed with ``lowresscalefactor``.
 * ``pbresponse`` allows a numpy array of the primary beam response of the interferometer to be applied to the low resolution data.
@@ -31,6 +31,7 @@ images when combining::
 * ``replace_hires`` will replace the high spatial frequencies of the feathered image above a set threshold in the low resolution beam kernel, rather than combining by the weighting kernel.
 * ``deconvSD`` will deconvolve the low resolution data by its beam before combining the data.
 * ``weights`` allows a 2D numpy array matching the high-resolution image size to be used as custom weighting, similar to the ``pbresponse``. This can be used to taper the edges of images to avoid Gibbs ringing.
+
 
 The impact of these many options is explored in depth in `this tutorial <https://github.com/radio-astro-tools/uvcombine/blob/master/examples/FeatheringTests.ipynb>`_.
 
