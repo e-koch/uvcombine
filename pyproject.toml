@@ -6,8 +6,8 @@ dynamic = [
 description = "Combination of high- and low-resoluation radio astronomical data."
 readme = "README.rst"
 authors = [
-    { name = "Eric Koch", email = "koch.eric.w@gmail.com" },
-    { name = "Adam Ginsburg", email = "adam.g.ginsburg@gmail.com" },
+  { name = "Eric Koch", email = "koch.eric.w@gmail.com" },
+  { name = "Adam Ginsburg"},
 ]
 license = "BSD-3-Clause"
 requires-python = ">=3.10"
@@ -57,8 +57,8 @@ repository = "https://github.com/radio-astro-tools/uvcombine"
 build-backend = "setuptools.build_meta"
 requires = [
             "setuptools>=61.2",
-            "setuptools_scm"
-           ]
+            "setuptools_scm",
+]
 
 [tool.setuptools]
 zip-safe = false
