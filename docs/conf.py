@@ -68,6 +68,10 @@ project = package_info["Name"]
 author = package_info["Author"]
 copyright = "{}, {}".format(datetime.datetime.now().year, package_info["Author"])
 
+if author is None:
+    print(project, author, copyright)
+    raise ValueError("package_info['Author'] is None")
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
