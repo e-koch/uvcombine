@@ -20,3 +20,9 @@ Getting started
    feathering_images.rst
    feathering_cubes.rst
    api.rst
+
+radio-astro-tools
+^^^^^^^^^^^^^^^^^^
+
+This package is part of the radio-astro-tools project. See
+`radio-astro-tools <https://radio-astro-tools.github.io/>`_ for more information.

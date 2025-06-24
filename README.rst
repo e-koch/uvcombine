@@ -11,3 +11,11 @@ with low-resolution images containing the short/zero spacing, including:
 See the `documentation <https://uvcombine.readthedocs.io/en/latest/>`_ for more information.
 
 Worked notebook examples of the uvcombine functionality can be found in the `examples <https://github.com/uvcombine/uvcombine/tree/master/examples>`_ directory.
+
+
+radio-astro-tools
+^^^^^^^^^^^^^^^^^
+
+This package is part of the radio-astro-tools project. See
+`radio-astro-tools <https://radio-astro-tools.github.io/>`_ for more information.
+
