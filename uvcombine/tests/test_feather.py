@@ -12,8 +12,7 @@ from skimage.metrics import structural_similarity, normalized_root_mse
 
 from . import path
 
-from ..uvcombine import (feather_simple, fourier_combine_cubes,
-                         feather_simple_cube)
+from ..uvcombine import (feather_simple, feather_simple_cube)
 
 
 def cube_and_raw(filename, use_dask=None):
@@ -262,34 +261,6 @@ def test_feather_simple_cube_diffunits(cube_data, use_dask, use_memmap):
     # Test against flux recovery
     frac_diff = (orig_cube - combo_cube_sc_smunits).sum() / orig_cube.sum()
     npt.assert_allclose(0., frac_diff, atol=5e-3)
-
-
-def test_feather_cube_consistency(cube_data, use_memmap):
-    '''
-    Before fourier_combine_cubes is fully deprecated, check consistency
-    with the output from feather_simple_cubes.
-    '''
-
-    orig_fname, sd_fname, interf_fname = cube_data
-
-    orig_cube, orig_data = cube_and_raw(orig_fname, use_dask=False)
-    sd_cube, sd_data = cube_and_raw(sd_fname, use_dask=False)
-    interf_cube, interf_data = cube_and_raw(interf_fname, use_dask=False)
-
-    combo_cube_sc = feather_simple_cube(interf_cube, sd_cube,
-                                        use_memmap=use_memmap)
-
-    combo_cube_fcc = fourier_combine_cubes(interf_cube, sd_cube, return_hdu=True)
-    combo_cube_fcc_sc = SpectralCube.read(combo_cube_fcc)
-
-    assert orig_cube.shape == combo_cube_sc.shape
-
-    assert combo_cube_sc.unit == interf_cube.unit
-
-    diff_cube = (combo_cube_sc - combo_cube_fcc_sc) / combo_cube_sc
-
-    assert diff_cube.max().value < 1e-10
-    assert np.abs(diff_cube.min().value) < 1e-10
 
 
 def test_feather_simple_cube_dask_rechunk(cube_data):
