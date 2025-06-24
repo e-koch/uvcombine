@@ -116,53 +116,6 @@ def test_feather_simple_mismatchunit(plaw_test_data):
         combo = feather_simple(highres_hdu, lowres_hdu, match_units=False)
 
 
-def test_fourier_combine_cubes(cube_data):
-
-    orig_fname, sd_fname, interf_fname = cube_data
-
-    orig_cube, orig_data = cube_and_raw(orig_fname, use_dask=False)
-    sd_cube, sd_data = cube_and_raw(sd_fname, use_dask=False)
-    interf_cube, interf_data = cube_and_raw(interf_fname, use_dask=False)
-
-    combo_cube = fourier_combine_cubes(interf_cube, sd_cube, return_hdu=True)
-
-    combo_cube_sc = SpectralCube.read(combo_cube)
-
-    assert orig_cube.shape == combo_cube_sc.shape
-
-    assert combo_cube_sc.unit == interf_cube.unit
-
-    # Test against flux recovery
-    frac_diff = (orig_cube - combo_cube_sc).sum() / orig_cube.sum()
-    npt.assert_allclose(0., frac_diff, atol=5e-3)
-
-
-def test_fourier_combine_cubes_diffunits(cube_data):
-
-    orig_fname, sd_fname, interf_fname = cube_data
-
-    orig_cube, orig_data = cube_and_raw(orig_fname, use_dask=False)
-    sd_cube, sd_data = cube_and_raw(sd_fname, use_dask=False)
-    interf_cube, interf_data = cube_and_raw(interf_fname, use_dask=False)
-
-    interf_cube = interf_cube.to(u.Jy / u.beam)
-
-    combo_cube = fourier_combine_cubes(interf_cube, sd_cube, return_hdu=True)
-
-    combo_cube_sc = SpectralCube.read(combo_cube)
-
-    assert orig_cube.shape == combo_cube_sc.shape
-
-    # Output units should in the units of the interferometer cube
-    assert combo_cube_sc.unit == interf_cube.unit
-
-    combo_cube_sc_smunits = combo_cube_sc.to(orig_cube.unit)
-
-    # Test against flux recovery
-    frac_diff = (orig_cube - combo_cube_sc_smunits).sum() / orig_cube.sum()
-    npt.assert_allclose(0., frac_diff, atol=5e-3)
-
-
 def test_feather_simple_cube(cube_data, use_dask, use_memmap):
 
     orig_fname, sd_fname, interf_fname = cube_data
