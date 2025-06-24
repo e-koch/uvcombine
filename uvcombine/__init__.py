@@ -7,4 +7,4 @@ from .uvcombine import (feather_plot, feather_simple, feather_compare,
                         fourier_combine_cubes, feather_simple_cube)
 
 __all__ = ['feather_plot', 'feather_simple', 'feather_compare',
-           'fourier_combine_cubes', 'feather_simple_cube']
+           'feather_simple_cube']
